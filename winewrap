@@ -1,22 +1,17 @@
 #!/usr/bin/env bash
 
-_INFOFILE="info"
-_WINEBIN="wine"
-_PREFIXDIR="prefix"
-_REQUIREMENTSFILE="requirements"
-_WINETRICKSBIN="winetricks"
-_WINEOPTIONS="explorer /desktop=d1,1920x1080"
-_BINS=(
+readonly _INFOFILE="info"
+readonly _WINEBIN="wine"
+readonly _PREFIXDIR="prefix"
+readonly _REQUIREMENTSFILE="requirements"
+readonly _WINETRICKSBIN="winetricks"
+readonly _BINS=(
     "$_WINEBIN"
     "$_WINETRICKSBIN"
 )
 
 error() {
     printf '%s\n' "$*" >&2
-}
-
-info() {
-    printf '%s\n' "$*"
 }
 
 usage() {
@@ -48,22 +43,22 @@ for bin in "${_BINS[@]}"; do
     checkprog "$bin"
 done
 
-wineprefix="$WINEPATH"/"$2"/"$_PREFIXDIR"
-gameinfo="$WINEPATH"/"$2"/"$_INFOFILE"
+readonly gameinfo="$WINEPATH"/"$2"/"$_INFOFILE"
 
 if ! [[ -r "$gameinfo" ]] ; then
     error "info file ($gameinfo) not found"
     exit 1
 fi
+
 source $gameinfo
 
-export WINEPREFIX="$wineprefix"
+export WINEPREFIX="$WINEPATH"/"$2"/"$_PREFIXDIR"
 export WINEARCH="$_ARCH"
 export WINEDLLOVERRIDES="$_DLL_OVERRIDES"
 
 case "$1" in
     start)
-        exe="$wineprefix"/"$_EXE"
+        exe="$WINEPREFIX"/"$_EXE"
 
         cd "$(dirname "$exe")"
 
@@ -77,7 +72,7 @@ case "$1" in
         done
         ;;
     *)
-        usage
+        error "unknown action \"$1\""
         exit 1
         ;;
 esac

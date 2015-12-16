@@ -1,0 +1,10 @@
+_ARCH=win32
+_DLL_OVERRIDES=
+_EXE="drive_c/Program Files/Some Program/start.exe"
+_WINEOPTINOS="explorer /desktop=d1,1920x1080"
+
+_REQUIREMENTS=(
+vcrun2008
+dotnet40
+d3dx9_36
+)
