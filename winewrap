@@ -71,6 +71,9 @@ case "$1" in
             winetricks --unattended "$requirement"
         done
         ;;
+    getenv)
+        printf '%s=%s\n' "WINEPREFIX" "$WINEPREFIX"
+        ;;
     *)
         error "unknown action \"$1\""
         exit 1

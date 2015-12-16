@@ -31,6 +31,7 @@ Action | Description
 --- | ---
 `start` | Start the specified game
 `setup` | Sets up a new clean wineprefix and installs requirements
+`getenv` | Prints the necessary environment variables to stdout
 
 ### Expected environment variables
 
