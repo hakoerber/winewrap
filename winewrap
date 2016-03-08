@@ -27,6 +27,13 @@ checkprog() {
     fi
 }
 
+packed() {
+    if [[ -e "$WINEPREFIX".tar.gz ]] ; then
+        return 0
+    fi
+    return 1
+}
+
 if (( $# != 2 )) ; then
     usage
     exit 1
@@ -56,6 +63,8 @@ export WINEPREFIX="$WINEPATH"/"$2"/"$_PREFIXDIR"
 export WINEARCH="$_ARCH"
 export WINEDLLOVERRIDES="$_DLL_OVERRIDES"
 
+_pack="$WINEPREFIX".tar.gz
+
 case "$1" in
     start)
         exe="$WINEPREFIX"/"$_EXE"
@@ -83,6 +92,32 @@ case "$1" in
 		Categories=Game
 		EOF
 		;;
+    pack)
+        if packed ; then
+            error "$2 is already packed."
+            exit 1
+        fi
+        tar --create --preserve-permissions --auto-compress --verbose \
+            --file "$_pack" \
+            --directory "$(dirname "$WINEPREFIX")" \
+            prefix
+        if ! (( $? )) ; then
+            rm -rf "$WINEPREFIX"
+        fi
+        ;;
+    unpack)
+        if ! packed ; then
+            error "$2 is not packed."
+            exit 1
+        fi
+        tar --extract --preserve-permissions --auto-compress --verbose \
+            --file "$_pack" \
+            --directory "$(dirname "$WINEPREFIX")" \
+            prefix
+        if ! (( $? )) ; then
+            rm -f "$_pack"
+        fi
+        ;;
     *)
         error "unknown action \"$1\""
         exit 1
