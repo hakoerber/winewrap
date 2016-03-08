@@ -67,7 +67,7 @@ case "$1" in
     setup)
         "$_WINEBIN" wineboot --init
 
-        for requirement in "${_REQUIREMENTS[@]}"; do
+        for requirement in "${_REQUIREMENTS[@]:+${_REQUIREMENTS[@]}}" ; do
             winetricks --unattended "$requirement"
         done
         ;;
